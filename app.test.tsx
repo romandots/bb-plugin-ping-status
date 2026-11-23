@@ -107,6 +107,17 @@ describe("composer customization", () => {
     expect(pingButton(slot).disabled).toBe(false);
   });
 
+  it("keeps the composer focused on tap so it does not collapse", () => {
+    const send = vi.fn(async () => ({ ok: true, delivery: "sent" }));
+    const slot = renderComposer({ isRunning: true, send });
+    const button = pingButton(slot);
+    // fireEvent returns false when a handler called preventDefault.
+    expect(fireEvent.pointerDown(button)).toBe(false);
+    expect(send).not.toHaveBeenCalled();
+    fireEvent.click(button);
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
   it("ignores a second click while a request is in flight", async () => {
     let release: () => void = () => {};
     const send = vi.fn(

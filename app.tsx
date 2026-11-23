@@ -83,6 +83,12 @@ function PingAction() {
       aria-label="Ping"
       title={hint}
       disabled={!canPing}
+      // On a compact composer, tapping anything outside the editor blurs it and
+      // bb collapses the composer, so the only feedback left is a toast that
+      // slides away under the collapsing box. Keeping the pointer's default
+      // (focus change) suppressed leaves the editor focused, the composer open,
+      // and the click still fires.
+      onPointerDown={(event) => event.preventDefault()}
       onClick={() => {
         if (threadId === null || pending) return;
         setPending(true);
