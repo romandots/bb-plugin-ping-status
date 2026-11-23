@@ -38,14 +38,22 @@ function PingAction() {
 
   // Registered for thread composers only, so the scope always carries a thread.
   const threadId = composer.scope.kind === "thread" ? composer.scope.threadId : null;
-  const canPing = threadId !== null && composer.isRunning && !pending;
+
+  // Deliberately not gated on composer.isRunning. bb reports that only while a
+  // turn is live (submitMode "queue" / "queue-while-stopping"), and the case
+  // Ping exists for is a run that has gone quiet — including one bb already
+  // considers not-running. `steer-if-active` covers both: it adds to the live
+  // turn, and starts one where nothing can be steered.
+  const canPing = threadId !== null && !pending;
 
   const hint =
     pending
       ? "Отправляю запрос статуса…"
-      : composer.isRunning
-        ? "Запросить статус у работающего агента"
-        : "Агент сейчас не работает";
+      : threadId === null
+        ? "Ping доступен только в композере треда"
+        : composer.isRunning
+          ? "Запросить статус — добавит сообщение в текущий ход"
+          : "Запросить статус — агент не работает, начнёт новый ход";
 
   async function ping(threadId: string): Promise<void> {
     const result = await sdk.threads.send({

@@ -8,12 +8,14 @@ without the turn being cut short.
 
 ## What it does
 
-- The button appears only in a thread's composer and is enabled only while that
-  thread's agent is running or stopping. On an idle thread there is nothing to
-  ping, so it stays disabled rather than starting a turn.
+- The button appears in a thread's composer and is always clickable there. It
+  does not gate on "is the agent running": bb reports that only while a turn is
+  live, and the case Ping exists for is a run that has gone quiet — including
+  one bb already considers idle. The tooltip says which of the two will happen.
 - One click sends the configured text with `mode: "steer-if-active"` through
-  bb's public thread API. The agent's reply lands in the transcript as a normal
-  assistant message.
+  bb's public thread API: into the live turn if there is one, otherwise a new
+  turn that answers with a status summary. The reply lands in the transcript as
+  a normal assistant message.
 - If the provider cannot be steered mid-turn, bb queues the request instead; the
   toast says which happened, so you never wonder whether the click did anything.
 - A second click while a request is in flight is ignored.

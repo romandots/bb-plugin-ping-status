@@ -58,15 +58,21 @@ describe("composer customization", () => {
     expect(customization!.actions![0]!.id).toBe("ping");
   });
 
-  it("stays disabled while the agent is not running", () => {
-    const send = vi.fn();
+  it("sends while the agent is not running, since a quiet run is the point", () => {
+    const send = vi.fn(async () => ({ ok: true, delivery: "sent" }));
     const slot = renderComposer({ isRunning: false, send });
-    expect(pingButton(slot).disabled).toBe(true);
-    fireEvent.click(pingButton(slot));
-    expect(send).not.toHaveBeenCalled();
+    const button = pingButton(slot);
+    expect(button.disabled).toBe(false);
+    expect(button.title).toMatch(/начнёт новый ход/);
+    fireEvent.click(button);
+    expect(send).toHaveBeenCalledWith({
+      threadId: "thr_42",
+      mode: "steer-if-active",
+      input: [{ type: "text", text: DEFAULT_PING_MESSAGE, mentions: [] }],
+    });
   });
 
-  it("steers the running turn with the configured request", async () => {
+  it("says when the running turn was steered", async () => {
     const send = vi.fn(async () => ({ ok: true, delivery: "sent" }));
     const slot = renderComposer({
       isRunning: true,
