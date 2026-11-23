@@ -1,0 +1,44 @@
+{
+  "name": "bb-plugin-ping-status",
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "bb": ">=0.50.1",
+    "bbPluginSdk": ">=0.6.168 <1"
+  },
+  "bb": {
+    "name": "Ping",
+    "description": "A Ping button in the composer that asks the running agent for a status update.",
+    "branding": {
+      "icon": "MessageQuestion"
+    },
+    "server": "./server.ts",
+    "app": "./app.tsx"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@get-bb/plugin-sdk": "0.6.169",
+    "@testing-library/react": "^16.3.3",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "better-sqlite3": "^12.11.1",
+    "clsx": "^2.1.1",
+    "hono": "^4.13.21",
+    "jsdom": "^26.1.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sonner": "^1.7.4",
+    "tailwind-merge": "^3.7.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.7"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "build": "bb plugin build"
+  }
+}
